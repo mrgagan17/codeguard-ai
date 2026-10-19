@@ -1,0 +1,16 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+sqlalchemy>=2.0.28
+pytest>=8.0.0
+httpx>=0.27.0
+ruff>=0.3.0
+bandit>=1.7.8
+radon>=6.0.1
+gitpython>=3.1.42
+python-multipart>=0.0.9
+aiofiles>=23.2.1
+detect-secrets>=1.5.0
+semgrep>=1.100.0
+

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  codeguard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: codeguard-ai
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./codeguard.db
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - codeguard-data:/app/backend/storage
+    restart: unless-stopped
+
+volumes:
+  codeguard-data:

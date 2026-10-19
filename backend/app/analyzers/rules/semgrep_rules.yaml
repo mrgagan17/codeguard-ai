@@ -1,0 +1,27 @@
+rules:
+  - id: python-insecure-hash-md5
+    patterns:
+      - pattern: hashlib.md5(...)
+    message: "Insecure hashing algorithm MD5 detected. Use SHA256 or SHA3 instead for cryptographic security."
+    languages: [python]
+    severity: WARNING
+    metadata:
+      cwe: ["CWE-328: Use of Weak Hash"]
+
+  - id: python-insecure-yaml-load
+    patterns:
+      - pattern: yaml.load($ARG, Loader=yaml.Loader)
+    message: "Unsafe yaml.load() can lead to arbitrary code execution. Use yaml.safe_load() instead."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: ["CWE-502: Deserialization of Untrusted Data"]
+
+  - id: python-insecure-ssl-verify-disabled
+    patterns:
+      - pattern: requests.$METHOD(..., verify=False, ...)
+    message: "SSL certificate verification is explicitly disabled. This allows man-in-the-middle (MITM) attacks."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: ["CWE-295: Improper Certificate Validation"]
