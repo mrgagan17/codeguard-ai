@@ -1,8 +1,11 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Text
+
+from sqlalchemy import Column, DateTime, String, Text
 from sqlalchemy.orm import relationship
+
 from app.database import Base
+
 
 class Project(Base):
     __tablename__ = "projects"

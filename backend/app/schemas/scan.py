@@ -1,36 +1,38 @@
-from typing import Optional, List
 from datetime import datetime
+
 from pydantic import BaseModel
+
 from app.schemas.finding import FindingResponse
+
 
 class ScanFileItem(BaseModel):
     file_path: str
     content: str
 
 class ScanCreateSnippet(BaseModel):
-    name: Optional[str] = "Snippet Review"
+    name: str | None = "Snippet Review"
     language: str = "python"
     code: str
 
 class ScanCreateMulti(BaseModel):
-    name: Optional[str] = "Multi-file Review"
-    project_id: Optional[str] = None
-    files: List[ScanFileItem]
+    name: str | None = "Multi-file Review"
+    project_id: str | None = None
+    files: list[ScanFileItem]
 
 class ToolRunResponse(BaseModel):
     tool_name: str
-    version: Optional[str] = None
+    version: str | None = None
     status: str
     duration_ms: int
     findings_count: int
-    error_message: Optional[str] = None
+    error_message: str | None = None
 
     class Config:
         from_attributes = True
 
 class ScanResponse(BaseModel):
     id: str
-    project_id: Optional[str] = None
+    project_id: str | None = None
     target_name: str
     trigger_type: str
     status: str
@@ -44,13 +46,13 @@ class ScanResponse(BaseModel):
     info_count: int
     duration_ms: int
     cache_hit_count: int
-    error_message: Optional[str] = None
+    error_message: str | None = None
     created_at: datetime
-    completed_at: Optional[datetime] = None
+    completed_at: datetime | None = None
 
     class Config:
         from_attributes = True
 
 class ScanDetailResponse(ScanResponse):
-    tool_runs: List[ToolRunResponse] = []
-    findings: List[FindingResponse] = []
+    tool_runs: list[ToolRunResponse] = []
+    findings: list[FindingResponse] = []

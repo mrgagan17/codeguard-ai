@@ -1,18 +1,17 @@
-import io
 import csv
+import io
 import json
 from datetime import datetime
-from typing import Dict, Any, List
-from sqlalchemy.orm import Session
 
-from app.models.scan import Scan
-from app.models.finding import Finding
-from app.models.tool_run import ToolRun
 from app.core.security import redact_text
+from app.models.finding import Finding
+from app.models.scan import Scan
+from app.models.tool_run import ToolRun
+
 
 class ReportService:
     @staticmethod
-    def generate_json_report(scan: Scan, findings: List[Finding], tool_runs: List[ToolRun]) -> str:
+    def generate_json_report(scan: Scan, findings: list[Finding], tool_runs: list[ToolRun]) -> str:
         report_data = {
             "application": "CodeGuard AI",
             "version": "1.0.0",
@@ -66,7 +65,7 @@ class ReportService:
         return json.dumps(report_data, indent=2)
 
     @staticmethod
-    def generate_csv_report(scan: Scan, findings: List[Finding]) -> str:
+    def generate_csv_report(scan: Scan, findings: list[Finding]) -> str:
         output = io.StringIO()
         writer = csv.writer(output)
         writer.writerow([
@@ -92,9 +91,9 @@ class ReportService:
         return output.getvalue()
 
     @staticmethod
-    def generate_markdown_report(scan: Scan, findings: List[Finding], tool_runs: List[ToolRun]) -> str:
+    def generate_markdown_report(scan: Scan, findings: list[Finding], tool_runs: list[ToolRun]) -> str:
         md = []
-        md.append(f"# CodeGuard AI Security & Quality Report")
+        md.append("# CodeGuard AI Security & Quality Report")
         md.append(f"**Target:** `{scan.target_name}` | **Scan ID:** `{scan.id}` | **Date:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}\n")
         
         md.append("## Executive Summary")
@@ -134,7 +133,7 @@ class ReportService:
         return "\n".join(md)
 
     @staticmethod
-    def generate_html_report(scan: Scan, findings: List[Finding], tool_runs: List[ToolRun], auto_print: bool = False) -> str:
+    def generate_html_report(scan: Scan, findings: list[Finding], tool_runs: list[ToolRun], auto_print: bool = False) -> str:
         findings_html = []
         for f in findings:
             sev_class = {

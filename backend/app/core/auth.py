@@ -1,17 +1,16 @@
-import os
-import hmac
 import hashlib
+import hmac
 import secrets
 from datetime import datetime, timedelta
-from typing import Optional
+
 import jwt
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.database import get_db
 from app.models.user import User
-from app.core.config import settings
 
 security_scheme = HTTPBearer(auto_error=False)
 
@@ -40,7 +39,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     except Exception:
         return False
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -50,7 +49,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
     return encoded_jwt
 
-def decode_access_token(token: str) -> Optional[dict]:
+def decode_access_token(token: str) -> dict | None:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         return payload
@@ -58,9 +57,9 @@ def decode_access_token(token: str) -> Optional[dict]:
         return None
 
 def get_current_user_optional(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security_scheme),
     db: Session = Depends(get_db)
-) -> Optional[User]:
+) -> User | None:
     if not credentials or not credentials.credentials:
         return None
     token = credentials.credentials
@@ -73,7 +72,7 @@ def get_current_user_optional(
     return db.query(User).filter(User.id == user_id).first()
 
 def get_current_user(
-    current_user: Optional[User] = Depends(get_current_user_optional)
+    current_user: User | None = Depends(get_current_user_optional)
 ) -> User:
     if not current_user:
         raise HTTPException(

@@ -1,18 +1,20 @@
-from typing import List, Optional, Tuple
-from sqlalchemy.orm import Session
+
 from sqlalchemy import or_
+from sqlalchemy.orm import Session
+
 from app.models.finding import Finding
 from app.schemas.finding import FindingFilter, FindingStatusUpdate
+
 
 class FindingService:
     @staticmethod
     def get_findings_for_scan(
         db: Session,
         scan_id: str,
-        filters: Optional[FindingFilter] = None,
+        filters: FindingFilter | None = None,
         skip: int = 0,
         limit: int = 100
-    ) -> Tuple[List[Finding], int]:
+    ) -> tuple[list[Finding], int]:
         query = db.query(Finding).filter(Finding.scan_id == scan_id)
 
         if filters:
@@ -42,7 +44,7 @@ class FindingService:
         return findings, total
 
     @staticmethod
-    def get_finding_by_id(db: Session, finding_id: str) -> Optional[Finding]:
+    def get_finding_by_id(db: Session, finding_id: str) -> Finding | None:
         return db.query(Finding).filter(Finding.id == finding_id).first()
 
     @staticmethod
@@ -50,7 +52,7 @@ class FindingService:
         db: Session,
         finding_id: str,
         update_data: FindingStatusUpdate
-    ) -> Optional[Finding]:
+    ) -> Finding | None:
         finding = db.query(Finding).filter(Finding.id == finding_id).first()
         if not finding:
             return None

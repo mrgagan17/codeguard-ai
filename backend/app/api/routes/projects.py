@@ -1,4 +1,4 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,7 +8,7 @@ from app.schemas.project import ProjectCreate, ProjectResponse
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
-@router.get("", response_model=List[ProjectResponse])
+@router.get("", response_model=list[ProjectResponse])
 def list_projects(db: Session = Depends(get_db)):
     return db.query(Project).order_by(Project.updated_at.desc()).all()
 

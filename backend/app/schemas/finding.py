@@ -1,7 +1,9 @@
-from typing import Optional, List
 from datetime import datetime
+
 from pydantic import BaseModel, Field
-from app.schemas.common import SeverityEnum, CategoryEnum, StatusEnum, ConfidenceEnum
+
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum, StatusEnum
+
 
 class FindingBase(BaseModel):
     rule_id: str
@@ -9,18 +11,18 @@ class FindingBase(BaseModel):
     description: str
     category: CategoryEnum
     severity: SeverityEnum
-    confidence: Optional[ConfidenceEnum] = ConfidenceEnum.HIGH
+    confidence: ConfidenceEnum | None = ConfidenceEnum.HIGH
     file_path: str
     start_line: int = Field(default=1, ge=1)
     end_line: int = Field(default=1, ge=1)
-    snippet: Optional[str] = None
+    snippet: str | None = None
     tool: str
-    why_it_matters: Optional[str] = None
-    recommended_remediation: Optional[str] = None
-    references: Optional[str] = None
+    why_it_matters: str | None = None
+    recommended_remediation: str | None = None
+    references: str | None = None
     status: StatusEnum = StatusEnum.OPEN
-    status_justification: Optional[str] = None
-    suppression_reason: Optional[str] = None
+    status_justification: str | None = None
+    suppression_reason: str | None = None
 
 class FindingCreate(FindingBase):
     pass
@@ -35,12 +37,12 @@ class FindingResponse(FindingBase):
 
 class FindingStatusUpdate(BaseModel):
     status: StatusEnum
-    justification: Optional[str] = None
+    justification: str | None = None
 
 class FindingFilter(BaseModel):
-    severity: Optional[SeverityEnum] = None
-    category: Optional[CategoryEnum] = None
-    status: Optional[StatusEnum] = None
-    tool: Optional[str] = None
-    file_path: Optional[str] = None
-    query: Optional[str] = None
+    severity: SeverityEnum | None = None
+    category: CategoryEnum | None = None
+    status: StatusEnum | None = None
+    tool: str | None = None
+    file_path: str | None = None
+    query: str | None = None

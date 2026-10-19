@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.analyzers import get_analyzer_status
 
 router = APIRouter()

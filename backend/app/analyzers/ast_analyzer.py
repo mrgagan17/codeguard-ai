@@ -1,17 +1,18 @@
 import ast
-from typing import List, Tuple, Optional
+
 from app.analyzers.base import BaseAnalyzer
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
 from app.core.security import redact_text
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class ASTCheckerVisitor(ast.NodeVisitor):
-    def __init__(self, filename: str, lines: List[str]):
+    def __init__(self, filename: str, lines: list[str]):
         self.filename = filename
         self.lines = lines
-        self.findings: List[FindingCreate] = []
+        self.findings: list[FindingCreate] = []
 
-    def _get_snippet(self, start_line: int, end_line: int) -> Optional[str]:
+    def _get_snippet(self, start_line: int, end_line: int) -> str | None:
         if not self.lines:
             return None
         s = max(0, start_line - 1)
@@ -81,9 +82,7 @@ class ASTCheckerVisitor(ast.NodeVisitor):
         for handler in node.handlers:
             # Check for bare except: or except Exception: / except BaseException:
             is_broad = False
-            if handler.type is None:  # bare except:
-                is_broad = True
-            elif isinstance(handler.type, ast.Name) and handler.type.id in ("Exception", "BaseException"):
+            if handler.type is None or isinstance(handler.type, ast.Name) and handler.type.id in ("Exception", "BaseException"):  # bare except:
                 is_broad = True
 
             # Check if body is empty or only pass/docstring
@@ -270,8 +269,8 @@ class ASTAnalyzer(BaseAnalyzer):
         self.is_available = True
         return True
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
-        findings: List[FindingCreate] = []
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
+        findings: list[FindingCreate] = []
 
         for rel_path, content in files:
             if not rel_path.endswith((".py", ".pyw")) or not content:

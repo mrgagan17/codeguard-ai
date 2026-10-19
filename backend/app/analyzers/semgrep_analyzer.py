@@ -1,15 +1,16 @@
-import os
-import sys
 import json
+import os
 import shutil
 import subprocess
-from typing import List, Tuple
+import sys
+
 from app.analyzers.base import BaseAnalyzer
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
 from app.core.config import settings
-from app.core.security import redact_text
 from app.core.logging import logger
+from app.core.security import redact_text
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class SemgrepAnalyzer(BaseAnalyzer):
     name: str = "semgrep"
@@ -67,11 +68,11 @@ class SemgrepAnalyzer(BaseAnalyzer):
             return SeverityEnum.LOW
         return SeverityEnum.MEDIUM
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
         if not self.is_available:
             return []
 
-        findings: List[FindingCreate] = []
+        findings: list[FindingCreate] = []
         try:
             # Point to local offline rule file to prevent network calls
             rule_file = os.path.join(os.path.dirname(__file__), "rules", "semgrep_rules.yaml")

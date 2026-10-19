@@ -2,7 +2,6 @@ import os
 import re
 import zipfile
 from pathlib import Path
-from typing import List, Tuple
 
 # Common patterns for API keys, tokens, and credentials
 COMMON_SECRET_PATTERNS = [
@@ -54,7 +53,7 @@ def is_safe_path(base_dir: str | Path, target_path: str | Path) -> bool:
     except Exception:
         return False
 
-def validate_safe_zip_members(zip_ref: zipfile.ZipFile, dest_dir: str | Path) -> List[Tuple[str, int]]:
+def validate_safe_zip_members(zip_ref: zipfile.ZipFile, dest_dir: str | Path) -> list[tuple[str, int]]:
     """
     Validate that all members of a ZIP archive extract safely into dest_dir:
     - No absolute paths

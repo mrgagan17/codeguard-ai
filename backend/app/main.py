@@ -1,19 +1,23 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.database import engine, Base
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 import app.models  # ensure models are registered
 from app.api.routes import (
-    health,
-    auth,
-    analyzers,
-    scans,
-    findings,
-    projects,
-    dashboard,
-    reports,
     ai,
+    analyzers,
+    auth,
+    dashboard,
+    findings,
+    health,
+    projects,
+    reports,
+    scans,
 )
+from app.core.config import settings
+from app.database import Base, engine
 
 # Initialize database schema
 Base.metadata.create_all(bind=engine)
@@ -67,10 +71,6 @@ app.include_router(projects.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(ai.router, prefix=settings.API_V1_STR)
-
-import os
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 
 # Check for production frontend bundle
 frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))

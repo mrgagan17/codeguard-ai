@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.scan import Scan
 from app.models.finding import Finding
+from app.models.scan import Scan
 from app.models.tool_run import ToolRun
 from app.services.report_service import ReportService
 

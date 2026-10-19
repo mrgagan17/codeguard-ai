@@ -1,5 +1,5 @@
-from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
+
 
 class ReportExportRequest(BaseModel):
     scan_id: str
@@ -10,7 +10,7 @@ class ReportExportRequest(BaseModel):
 class SettingItem(BaseModel):
     key: str
     value: str
-    description: Optional[str] = None
+    description: str | None = None
 
 class SettingUpdateBatch(BaseModel):
-    settings: Dict[str, str]
+    settings: dict[str, str]

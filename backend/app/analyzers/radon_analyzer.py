@@ -1,11 +1,13 @@
-from typing import List, Tuple
+
 import radon.complexity as cc
 import radon.metrics as mi
+
 from app.analyzers.base import BaseAnalyzer
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
 from app.core.config import settings
 from app.core.logging import logger
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class RadonAnalyzer(BaseAnalyzer):
     name: str = "radon"
@@ -16,16 +18,12 @@ class RadonAnalyzer(BaseAnalyzer):
     description: str = "Measures cyclomatic complexity and maintainability index to highlight hard-to-maintain code blocks."
 
     def check_availability(self) -> bool:
-        try:
-            import radon
-            self.is_available = True
-            return True
-        except ImportError:
-            self.is_available = False
-            return False
+        import importlib.util
+        self.is_available = importlib.util.find_spec("radon") is not None
+        return self.is_available
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
-        findings: List[FindingCreate] = []
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
+        findings: list[FindingCreate] = []
 
         for rel_path, content in files:
             if not rel_path.endswith((".py", ".pyw")) or not content:

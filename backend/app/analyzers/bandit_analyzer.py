@@ -1,14 +1,15 @@
-import os
-import sys
 import json
+import os
 import subprocess
-from typing import List, Tuple
+import sys
+
 from app.analyzers.base import BaseAnalyzer
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
 from app.core.config import settings
-from app.core.security import redact_text
 from app.core.logging import logger
+from app.core.security import redact_text
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class BanditAnalyzer(BaseAnalyzer):
     name: str = "bandit"
@@ -58,7 +59,7 @@ class BanditAnalyzer(BaseAnalyzer):
             return ConfidenceEnum.LOW
         return ConfidenceEnum.MEDIUM
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
         if not self.is_available:
             return []
 
@@ -66,7 +67,7 @@ class BanditAnalyzer(BaseAnalyzer):
         if not py_files:
             return []
 
-        findings: List[FindingCreate] = []
+        findings: list[FindingCreate] = []
         try:
             cmd = [
                 sys.executable, "-m", "bandit",

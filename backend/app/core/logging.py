@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 def setup_logging():
     logger = logging.getLogger("codeguard")
     logger.setLevel(logging.INFO)

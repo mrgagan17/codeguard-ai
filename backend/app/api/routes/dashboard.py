@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from sqlalchemy import func
+from sqlalchemy.orm import Session
+
 from app.database import get_db
-from app.models.scan import Scan
 from app.models.finding import Finding
+from app.models.scan import Scan
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 

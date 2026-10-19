@@ -1,11 +1,10 @@
-from typing import Dict, Any
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.database import get_db
 from app.models.setting import AppSetting
 from app.schemas.report import SettingUpdateBatch
-from app.core.config import settings
 
 router = APIRouter(prefix="/settings", tags=["Settings"])
 

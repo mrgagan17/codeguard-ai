@@ -1,7 +1,8 @@
 import os
-from typing import List
+
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "CodeGuard AI"
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
     
     # CORS
-    CORS_ORIGINS: List[str] = [
+    CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -41,7 +42,7 @@ class Settings(BaseSettings):
     # Upload limits
     MAX_UPLOAD_SIZE_BYTES: int = 15 * 1024 * 1024  # 15 MB
     MAX_UPLOAD_FILES: int = 150
-    ALLOWED_EXTENSIONS: List[str] = [".py", ".pyw", ".txt", ".md", ".json", ".yaml", ".yml"]
+    ALLOWED_EXTENSIONS: list[str] = [".py", ".pyw", ".txt", ".md", ".json", ".yaml", ".yml"]
     
     # Cache
     CACHE_ENABLED: bool = True

@@ -1,14 +1,14 @@
-import os
-import sys
 import json
+import os
 import subprocess
-from typing import List, Tuple
+import sys
+
 from app.analyzers.base import BaseAnalyzer
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
 from app.core.config import settings
-from app.core.security import redact_text
 from app.core.logging import logger
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class RuffAnalyzer(BaseAnalyzer):
     name: str = "ruff"
@@ -35,7 +35,7 @@ class RuffAnalyzer(BaseAnalyzer):
         self.is_available = False
         return False
 
-    def _map_code_to_meta(self, code: str) -> Tuple[SeverityEnum, CategoryEnum]:
+    def _map_code_to_meta(self, code: str) -> tuple[SeverityEnum, CategoryEnum]:
         """Categorize and assign severity based on Ruff rule prefix."""
         if not code or code in ("SYNTAX-ERROR", "None") or code.startswith("E9") or code.startswith("F7"):
             return SeverityEnum.CRITICAL, CategoryEnum.BUG_RISK
@@ -54,7 +54,7 @@ class RuffAnalyzer(BaseAnalyzer):
             return SeverityEnum.LOW, CategoryEnum.STYLE
         return SeverityEnum.MEDIUM, CategoryEnum.QUALITY
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
         if not self.is_available:
             return []
 
@@ -62,7 +62,7 @@ class RuffAnalyzer(BaseAnalyzer):
         if not py_files:
             return []
 
-        findings: List[FindingCreate] = []
+        findings: list[FindingCreate] = []
         file_map = {f[0].replace("\\", "/"): f[1] for f in files}
 
         try:

@@ -4,6 +4,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
+[![License: Proprietary](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](#11-license)
 [![Privacy First](https://img.shields.io/badge/Privacy-100%25%20Offline%20Safe-success.svg)](#privacy--security-model)
 
 > **CodeGuard AI** is a production-grade, privacy-first static code review and security assistant. It inspects source code for security vulnerabilities, secrets, complexity traps, and quality debt before code is committed or deployed—with **zero cloud data leakage**, no paid API requirements, and instant deterministic analysis.
@@ -274,3 +275,12 @@ The repository contains 21 unit, integration, and security tests covering:
 - [ ] Direct IDE integration extension for VS Code.
 - [ ] Pre-commit hook generator for Git repositories.
 - [ ] PR comment bot integration for GitHub Actions and GitLab CI.
+
+
+---
+
+## 11. License
+
+Copyright &copy; 2026 mrgagan17. All Rights Reserved.
+
+This project and its source code are proprietary. Unauthorized copying, distribution, modification, or reproduction of any part of this software without explicit prior written consent is strictly prohibited.

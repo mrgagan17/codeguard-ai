@@ -1,34 +1,33 @@
-import os
 import io
-import zipfile
-import tempfile
+import os
 import shutil
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
+import tempfile
+import zipfile
+
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from sqlalchemy.orm import Session
 
+from app.core.auth import get_current_user, get_current_user_optional
+from app.core.config import settings
+from app.core.security import validate_safe_zip_members
 from app.database import get_db
 from app.models.scan import Scan
-from app.schemas.scan import (
-    ScanResponse,
-    ScanDetailResponse,
-    ScanCreateSnippet,
-    ScanCreateMulti
-)
-from app.services.scan_service import ScanService
-from app.services.git_service import GitService
-from app.core.security import validate_safe_zip_members, is_safe_path
-from app.core.config import settings
-from app.core.auth import get_current_user, get_current_user_optional
 from app.models.user import User
-from sqlalchemy import or_
+from app.schemas.scan import (
+    ScanCreateMulti,
+    ScanCreateSnippet,
+    ScanDetailResponse,
+    ScanResponse,
+)
+from app.services.git_service import GitService
+from app.services.scan_service import ScanService
 
 router = APIRouter(prefix="/scans", tags=["Scans"])
 
 @router.post("", response_model=ScanResponse)
 def create_snippet_scan(
     payload: ScanCreateSnippet,
-    current_user: Optional[User] = Depends(get_current_user_optional),
+    current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     """Analyze a pasted code snippet."""
@@ -66,10 +65,10 @@ def create_multi_file_scan(
 
 @router.post("/upload", response_model=ScanResponse)
 async def upload_files_scan(
-    files: List[UploadFile] = File(...),
-    name: Optional[str] = Form("Uploaded Files Review"),
-    project_id: Optional[str] = Form(None),
-    current_user: Optional[User] = Depends(get_current_user_optional),
+    files: list[UploadFile] = File(...),
+    name: str | None = Form("Uploaded Files Review"),
+    project_id: str | None = Form(None),
+    current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     """Analyze multiple uploaded files with strict size and extension checks."""
@@ -119,9 +118,9 @@ async def upload_files_scan(
 @router.post("/upload-zip", response_model=ScanResponse)
 async def upload_zip_scan(
     zip_file: UploadFile = File(...),
-    name: Optional[str] = Form("Repository Archive"),
-    project_id: Optional[str] = Form(None),
-    current_user: Optional[User] = Depends(get_current_user_optional),
+    name: str | None = Form("Repository Archive"),
+    project_id: str | None = Form(None),
+    current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     """Analyze a repository ZIP archive with strict zip-slip and bomb protection."""
@@ -139,7 +138,7 @@ async def upload_zip_scan(
                 validate_safe_zip_members(z, temp_extract)
                 z.extractall(temp_extract)
         except Exception as ze:
-            raise HTTPException(status_code=400, detail=f"Invalid or unsafe ZIP archive: {str(ze)}")
+            raise HTTPException(status_code=400, detail=f"Invalid or unsafe ZIP archive: {ze!s}")
 
         # Collect python files
         for root, dirs, files_in_dir in os.walk(temp_extract):
@@ -175,9 +174,9 @@ async def upload_zip_scan(
 @router.post("/git", response_model=ScanResponse)
 def scan_git_repository(
     repo_path: str = Form(...),
-    base_ref: Optional[str] = Form("HEAD~1"),
-    name: Optional[str] = Form("Git Repository Changes"),
-    project_id: Optional[str] = Form(None),
+    base_ref: str | None = Form("HEAD~1"),
+    name: str | None = Form("Git Repository Changes"),
+    project_id: str | None = Form(None),
     db: Session = Depends(get_db)
 ):
     """Analyze changed files in an explicitly specified local Git repository."""
@@ -201,12 +200,12 @@ def scan_git_repository(
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
 
-@router.get("", response_model=List[ScanResponse])
+@router.get("", response_model=list[ScanResponse])
 def list_scans(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    project_id: Optional[str] = None,
-    current_user: Optional[User] = Depends(get_current_user_optional),
+    project_id: str | None = None,
+    current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     """List historical scans ordered by most recent for the authenticated user only."""

@@ -1,29 +1,24 @@
-from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas.finding import (
-    FindingResponse,
-    FindingStatusUpdate,
-    FindingFilter
-)
-from app.schemas.common import SeverityEnum, CategoryEnum, StatusEnum
 from app.schemas.ai import ExplainFindingResponse, FixSuggestionResponse
-from app.services.finding_service import FindingService
+from app.schemas.common import CategoryEnum, SeverityEnum, StatusEnum
+from app.schemas.finding import FindingFilter, FindingResponse, FindingStatusUpdate
 from app.services.ai_service import AIService
+from app.services.finding_service import FindingService
 
 router = APIRouter(tags=["Findings"])
 
 @router.get("/scans/{scan_id}/findings")
 def list_scan_findings(
     scan_id: str,
-    severity: Optional[SeverityEnum] = None,
-    category: Optional[CategoryEnum] = None,
-    status: Optional[StatusEnum] = None,
-    tool: Optional[str] = None,
-    file_path: Optional[str] = None,
-    query: Optional[str] = None,
+    severity: SeverityEnum | None = None,
+    category: CategoryEnum | None = None,
+    status: StatusEnum | None = None,
+    tool: str | None = None,
+    file_path: str | None = None,
+    query: str | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=200),
     db: Session = Depends(get_db)
@@ -77,7 +72,7 @@ def update_status(
 @router.post("/findings/{finding_id}/explain", response_model=ExplainFindingResponse)
 async def explain_finding(
     finding_id: str,
-    custom_model: Optional[str] = None,
+    custom_model: str | None = None,
     db: Session = Depends(get_db)
 ):
     """Explain why this finding matters and how to address it, utilizing Ollama or verified rules."""
@@ -89,7 +84,7 @@ async def explain_finding(
 @router.post("/findings/{finding_id}/suggest-fix", response_model=FixSuggestionResponse)
 async def suggest_fix(
     finding_id: str,
-    custom_model: Optional[str] = None,
+    custom_model: str | None = None,
     db: Session = Depends(get_db)
 ):
     """Generate or retrieve a safe unified diff patch and remediation for this finding."""

@@ -1,15 +1,18 @@
 import difflib
-import json
+
 import httpx
-from typing import Dict, Any, Optional, List
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
+from app.core.logging import logger
+from app.core.security import redact_text
 from app.models.finding import Finding
 from app.models.fix_suggestion import FixSuggestion
-from app.schemas.ai import ExplainFindingResponse, FixSuggestionResponse, OllamaStatusResponse
-from app.core.config import settings
-from app.core.security import redact_text
-from app.core.logging import logger
+from app.schemas.ai import (
+    ExplainFindingResponse,
+    FixSuggestionResponse,
+    OllamaStatusResponse,
+)
 
 DETERMINISTIC_RULES_KNOWLEDGE = {
     "AST-001": {
@@ -107,7 +110,7 @@ class AIService:
         )
 
     @classmethod
-    async def explain_finding(cls, db: Session, finding: Finding, custom_model: Optional[str] = None) -> ExplainFindingResponse:
+    async def explain_finding(cls, db: Session, finding: Finding, custom_model: str | None = None) -> ExplainFindingResponse:
         """Explain finding using local Ollama if available, otherwise high quality deterministic explanation."""
         model_name = custom_model or settings.OLLAMA_DEFAULT_MODEL
         ollama_status = await cls.check_ollama_status()
@@ -190,7 +193,7 @@ class AIService:
         return "\n".join(diff)
 
     @classmethod
-    async def suggest_fix(cls, db: Session, finding: Finding, custom_model: Optional[str] = None) -> FixSuggestionResponse:
+    async def suggest_fix(cls, db: Session, finding: Finding, custom_model: str | None = None) -> FixSuggestionResponse:
         """Generate a patch and fix suggestion for a finding."""
         # Check if existing fix already persisted
         existing = db.query(FixSuggestion).filter(FixSuggestion.finding_id == finding.id).first()

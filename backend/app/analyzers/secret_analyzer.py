@@ -1,11 +1,9 @@
-import os
 import re
-from typing import List, Tuple
+
 from app.analyzers.base import BaseAnalyzer
+from app.core.security import redact_text
+from app.schemas.common import CategoryEnum, ConfidenceEnum, SeverityEnum
 from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
-from app.core.security import redact_secret, redact_text
-from app.core.logging import logger
 
 SECRET_PATTERNS = [
     {
@@ -70,8 +68,8 @@ class SecretAnalyzer(BaseAnalyzer):
         self.is_available = True
         return True
 
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
-        findings: List[FindingCreate] = []
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
+        findings: list[FindingCreate] = []
 
         for rel_path, content in files:
             if not content:

@@ -1,25 +1,25 @@
+import hashlib
 import os
-import time
 import shutil
 import tempfile
-import hashlib
+import time
 from datetime import datetime
-from typing import List, Tuple, Optional, Dict
+
 from sqlalchemy.orm import Session
 
-from app.models.scan import Scan, ScanFile
-from app.models.finding import Finding
-from app.models.tool_run import ToolRun
-from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum
 from app.analyzers import get_all_analyzers
-from app.services.cache_service import cache_service
 from app.core.logging import logger
 from app.core.security import is_safe_path
+from app.models.finding import Finding
+from app.models.scan import Scan, ScanFile
+from app.models.tool_run import ToolRun
+from app.schemas.common import SeverityEnum
+from app.schemas.finding import FindingCreate
+
 
 class ScanService:
     @staticmethod
-    def _deduplicate_findings(findings: List[FindingCreate]) -> List[FindingCreate]:
+    def _deduplicate_findings(findings: list[FindingCreate]) -> list[FindingCreate]:
         """Deduplicate findings based on file path, line range, and rule identifier."""
         seen = set()
         seen_semicolons = set()
@@ -43,9 +43,9 @@ class ScanService:
         db: Session,
         target_name: str,
         trigger_type: str,
-        files: List[Tuple[str, str]],  # (relative_path, content)
-        project_id: Optional[str] = None,
-        user_id: Optional[str] = None
+        files: list[tuple[str, str]],  # (relative_path, content)
+        project_id: str | None = None,
+        user_id: str | None = None
     ) -> Scan:
         start_time = time.time()
 
@@ -98,7 +98,7 @@ class ScanService:
 
             # Execute Analyzers
             analyzers = get_all_analyzers()
-            all_raw_findings: List[FindingCreate] = []
+            all_raw_findings: list[FindingCreate] = []
             cache_hits = 0
 
             for analyzer in analyzers:
@@ -117,7 +117,7 @@ class ScanService:
                     continue
 
                 tool_start = time.time()
-                tool_findings: List[FindingCreate] = []
+                tool_findings: list[FindingCreate] = []
                 status_str = "success"
                 err_msg = None
 

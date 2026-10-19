@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.schemas.ai import OllamaStatusResponse
 from app.services.ai_service import AIService
 

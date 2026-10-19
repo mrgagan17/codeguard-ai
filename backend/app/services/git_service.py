@@ -1,12 +1,13 @@
 import os
-from typing import List, Tuple, Optional
+
 import git
+
 from app.core.logging import logger
-from app.core.security import is_safe_path
+
 
 class GitService:
     @staticmethod
-    def get_changed_files(repo_path: str, base_ref: str = "HEAD~1") -> List[Tuple[str, str]]:
+    def get_changed_files(repo_path: str, base_ref: str = "HEAD~1") -> list[tuple[str, str]]:
         """
         Extract changed files (relative_path, current_content) from a local git repository.
         Only reads repository files, never commits or modifies anything.
@@ -19,7 +20,7 @@ class GitService:
             if repo.bare:
                 raise ValueError("Bare git repositories are not supported.")
 
-            changed_files: List[Tuple[str, str]] = []
+            changed_files: list[tuple[str, str]] = []
 
             # 1. Check working tree unstaged & staged diffs
             diff_index = repo.head.commit.diff(None)  # uncommitted changes
@@ -70,4 +71,4 @@ class GitService:
             raise ValueError(f"Directory is not a valid Git repository: {repo_path}")
         except Exception as e:
             logger.error(f"Git analysis error: {e}")
-            raise ValueError(f"Failed to analyze Git repository: {str(e)}")
+            raise ValueError(f"Failed to analyze Git repository: {e!s}")

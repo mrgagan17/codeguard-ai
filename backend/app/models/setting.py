@@ -1,6 +1,9 @@
 from datetime import datetime
-from sqlalchemy import Column, String, Text, DateTime
+
+from sqlalchemy import Column, DateTime, String, Text
+
 from app.database import Base
+
 
 class AppSetting(Base):
     __tablename__ = "app_settings"

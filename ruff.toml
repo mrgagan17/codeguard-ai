@@ -1,0 +1,13 @@
+# Ruff configuration for CodeGuard AI
+line-length = 120
+target-version = "py311"
+
+[lint]
+select = ["E", "F"]
+ignore = [
+    "E501",  # line length
+    "E741",  # ambiguous variable name
+    "W291",  # trailing whitespace
+    "W292",  # no newline at end of file
+    "W293",  # blank line contains whitespace
+]

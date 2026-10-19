@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Dict, Any, Optional
+
+from app.schemas.common import SeverityEnum
 from app.schemas.finding import FindingCreate
-from app.schemas.common import SeverityEnum, CategoryEnum, ConfidenceEnum
+
 
 class BaseAnalyzer(ABC):
     name: str = "base"
@@ -17,16 +18,14 @@ class BaseAnalyzer(ABC):
     @abstractmethod
     def check_availability(self) -> bool:
         """Check if analyzer binary/library is installed and operational."""
-        pass
 
     @abstractmethod
-    def analyze(self, files: List[Tuple[str, str]], base_dir: str) -> List[FindingCreate]:
+    def analyze(self, files: list[tuple[str, str]], base_dir: str) -> list[FindingCreate]:
         """
         Analyze a list of (relative_file_path, file_content) files in base_dir.
         Must return normalized FindingCreate instances.
         Must not raise uncaught exceptions to caller.
         """
-        pass
 
     @staticmethod
     def normalize_severity(raw_level: str) -> SeverityEnum:
