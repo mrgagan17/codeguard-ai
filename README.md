@@ -269,17 +269,7 @@ The repository contains 21 unit, integration, and security tests covering:
 
 ---
 
-## 10. Roadmap
-
-- [ ] AST analyzers for JavaScript / TypeScript via ESLint / Babel.
-- [ ] Direct IDE integration extension for VS Code.
-- [ ] Pre-commit hook generator for Git repositories.
-- [ ] PR comment bot integration for GitHub Actions and GitLab CI.
-
-
----
-
-## 11. License
+## 10. License
 
 Copyright &copy; 2026 mrgagan17. All Rights Reserved.
 
