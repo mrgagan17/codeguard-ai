@@ -4,7 +4,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Privacy First](https://img.shields.io/badge/Privacy-100%25%20Offline%20Safe-success.svg)](#privacy--security-model)
 
 > **CodeGuard AI** is a production-grade, privacy-first static code review and security assistant. It inspects source code for security vulnerabilities, secrets, complexity traps, and quality debt before code is committed or deployed—with **zero cloud data leakage**, no paid API requirements, and instant deterministic analysis.
