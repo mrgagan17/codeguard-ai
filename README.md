@@ -10,6 +10,8 @@
 > **CodeGuard AI** is a production-grade, privacy-first static code review and security assistant. It inspects source code for security vulnerabilities, secrets, complexity traps, and quality debt before code is committed or deployed—with **zero cloud data leakage**, no paid API requirements, and instant deterministic analysis.
 
 ---
+CodeGuard AI — Static Code Security & Automated Review Assistant
+Live Demo: https://codeguard-ai-murex.vercel.app
 
 ## 1. Problem Statement
 
