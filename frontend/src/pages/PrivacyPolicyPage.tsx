@@ -101,7 +101,7 @@ export const PrivacyPolicyPage: React.FC = () => {
 
         <div className="pt-4 border-t border-[#1C1C1C] flex items-center justify-between text-[11px] text-[#666666]">
           <span>Security & Compliance: Air-Gapped Standard</span>
-          <span>Contact: security@codeguard.ai</span>
+          <span>Contact: gagansecurity@gmail.com</span>
         </div>
       </div>
     </div>
